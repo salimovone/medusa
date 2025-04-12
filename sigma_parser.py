@@ -1,4 +1,6 @@
 import yaml
+import json
+from helper import log
 
 rule_path = "./rules/rule.yml"
 
@@ -30,10 +32,22 @@ def get_sections(rule_obj):
         return dumpDict
     else:
         return None
+    
 
-# def check_selections ():
+"""malumotni tekshirish"""
+
+
+def check_selections (selsections: dict, log: dict):
+    if selsections:
+        for key, value in log.items():
+            print(f"value: {value}")
 
 
 
+ruleInDict = parse_sigma_rule(rule_path)
+sections = get_sections(ruleInDict)
+log_dict = json.loads(log)
 
-# print(get_sections(parse_sigma_rule(rule_path)))
+print(log_dict)
+
+# check_selections(sections, log_dict)
