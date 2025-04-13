@@ -1,9 +1,8 @@
 import yaml
-import json
-from helper import log
+from helper import logs
 
 rule_path = "./rules/rule.yml"
-
+log = logs[5]
 
 
 def parse_sigma_rule(file_path):
@@ -34,20 +33,57 @@ def get_sections(rule_obj):
         return None
     
 
+    
+
 """malumotni tekshirish"""
 
 
 def check_selections (selsections: dict, log: dict):
-    if selsections:
-        for key, value in log.items():
-            print(f"value: {value}")
-
+    logDataDump = list(log["Message"])
+    logData = dict()
+    for i in logDataDump[0].split("\r\n"):
+        iList = i.split(": ")
+        if len(iList) > 1:
+            logData[iList[0]] = iList[1]
+    
+    # for key, value in logData.items():
+    #     print(f"{key}: {value} \n")
+    
+    for key, value in selsections.items():
+        # print(list(dict(value).items()))
+        check_log(logData, list(dict(value).items()))
+        
+        
+def check_log(logData : dict, rule):
+    rule = list(rule[0])
+    modifier = rule[0].split("|")
+    field = rule[1]
+    if not logData.get(modifier[0], False):
+        return False
+    logField = logData[modifier[0]]
+    
+    if "cased" in modifier:
+        for i in field:
+            print(i == logField)
+    if "contains" in modifier:
+        for i in field:
+            print(i.lower() in logField.lower())
+    if "startswith" in modifier:
+        for i in field:
+            print(logField.startswith(i))
+    if "endswith" in modifier:
+        for i in field:
+            print(logField.endswith(i))
+    if "matches" in modifier:
+        for i in field:
+            print(logField == i)
+    # if "equals" in modifier:
+        
+        
 
 
 ruleInDict = parse_sigma_rule(rule_path)
 sections = get_sections(ruleInDict)
-log_dict = json.loads(log)
 
-print(log_dict)
 
-# check_selections(sections, log_dict)
+check_selections(sections, log)

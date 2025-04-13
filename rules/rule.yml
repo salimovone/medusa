@@ -19,7 +19,7 @@ detection:
             - 'type '
             - ' > \\\\'
     selection_download:
-        CommandLine|contains|all:
+        CommandLine|cased|all:
             - 'type \\\\'
             - ' > '
     selection_test:
